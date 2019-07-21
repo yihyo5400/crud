@@ -30,7 +30,11 @@
     body {
         font-family: 'S-CoreDream-3Light';
     }
-
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
     a,
     a:focus,
     a:hover {
@@ -99,9 +103,7 @@
     padding: .75rem 1.25rem;
     font-weight: 700;
     }
-    .lead {
-        font-size: 20px;
-    }
+
 
     /*
     * Footer
@@ -111,52 +113,29 @@
     }
     </style>
   </head>
-  <body>
+  <body class="text-center">
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
   <header class="masthead mb-auto">
-    <br><br>
-    <ul class="nav nav-tabs">
-    {% if user.is_active %}
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'newblog' %}">글 쓰러가기</a>
-    </li>
-    {% else %}
-    {% endif %}
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">MY</a>
-        <div class="dropdown-menu">
-        {% if user.is_active %}
-          <!-- <a class="dropdown-item" href="{% url 'logout' %}">LOGOUT</a> -->
-          <a class="dropdown-item" href="javascript:{document.getElementById('logout').submit()}">LOGOUT</a>
-            <form id="logout" method="POST" action="{% url 'logout' %}">
-                {% csrf_token %} <input type="hidden" />
-            </form>
-        {% else %}
-          <a class="dropdown-item" href="{% url 'login' %}">LOGIN</a>
-          <a class="dropdown-item" href="{% url 'signup' %}">SIGNUP</a>
-        {% endif %}
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'welcome' %}">첫화면으로</a>
-    </li>
-    </ul>
-    <br><br>
+    <div class="inner">
+      <h3 class="masthead-brand"><a href = "{% url 'home' %}">뒤로가기</a></h3>
+    </div>
   </header>
 
   <main role="main" class="inner cover">
-    {% if user.is_active %}
-      안녕하세요, {{ user.username }}님!
-        {% for blog in blogs.all %}
-          <h1 class="cover-heading"><a href="{% url 'detail' blog.id %}">{{blog.title}}</a></h1>
-          <p class="lead">{{blog.pub_date}}</p>
-          <p class="lead">{{blog.body}}</p>
-          <p class="lead"><a href="{% url 'update' blog.id %}" class="btn btn-lg btn-secondary">수정</a>
-          <a href="{% url 'delete' blog.id %}" class="btn btn-lg btn-secondary">삭제</a></p>
-          <hr>
-        {% endfor %}
-    {% else %}
-      <p class="lead">로그인이 필요한 서비스입니다.</p>
-    {% endif %}
+    <h1 class="cover-heading">LOGIN</h1>  
+        <form method = "POST" action = "{% url 'login' %}">
+            {% csrf_token %}
+            Username
+            <br>
+            <input name="username" type="text" value="">
+            <br>
+            Password
+            <br>
+            <input name="password" type="password" value="">
+            <br>
+            <br>
+            <input class="btn btn-lg btn-secondary" type="submit" value="LOGIN">
+        </form>
   </main>
 
   <footer class="mastfoot mt-auto">

@@ -1,7 +1,9 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from .models import Blog
-from .forms import NewBlog
+from .models import Blog, Comment
+from .forms import NewBlog, CommentForm
+
 
 #처음 실행화면
 def welcome(request):
@@ -10,7 +12,7 @@ def welcome(request):
 #지금까지 쓴 글 읽기
 def read(request):
     blogs = Blog.objects.all()
-    return render (request, 'crud.html', {'blogs':blogs})
+    return render(request, 'crud.html', {'blogs':blogs})
 
 #글쓰기
 def create(request):
@@ -41,7 +43,7 @@ def update(request,pk):
             post.save()
             return redirect('home') #url의 name
         else:
-            form = NewBlog(instance=blog) # forms.py의 BoardForm 클래스의 인스턴트
+            form = NewBlog(instance=blog) # forms.py의 NewBlog 클래스의 인스턴트
             return render(request, 'new.html', {'form' : form})
 
     return render(request, 'new.html', {'form':form})
@@ -50,3 +52,40 @@ def delete(request,pk):
     blog = get_object_or_404(Blog, pk = pk)
     blog.delete()
     return redirect('home')
+
+def detail(request, board_id):
+    board_detail = get_object_or_404(Blog, pk=board_id)
+    comments = Comment.objects.filter(board_id=board_id)
+    return render(request, 'detail.html', {'board':board_detail})
+
+# 댓글
+def comment_write(request, pk):
+
+    if request.method == 'POST':
+            comment_form = CommentForm(request.POST)
+
+            if comment_form.is_valid():
+                    comment = comment_form.save(commit=False)
+                    comment.board = Blog.objects.get(pk=pk)
+                    comment.created_at = timezone.now()
+                    comment.save()
+                    return redirect('detail', pk)
+    else:
+            comment_form = CommentForm()
+    return render(request, 'comment_form.html', {'comment_form' : comment_form})
+    
+def comment_edit(request, board_pk, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+
+    if request.method == 'POST':
+            comment_form = CommentForm(request.POST, instance=comment)
+
+            if comment_form.is_valid():
+                    comment = comment_form.save(commit=False)
+                    comment.board = Blog.objects.get(pk=board_pk)
+                    comment.save()
+                    return redirect('detail', board_pk)
+
+    else:
+            comment_form = CommentForm(instance=comment)
+    return render(request, 'comment_form.html', {'comment_form' : comment_form}) 

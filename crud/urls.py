@@ -15,11 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-import crudapp.views
-import crudapp.urls
+import crudapp.views, account.views
+import crudapp.urls, account.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', crudapp.views.welcome, name="welcome"),
-    path('crud/', include(crudapp.urls)),
+    path('crud/', include('crudapp.urls')),
+    path('account/', include('account.urls')),
 ]

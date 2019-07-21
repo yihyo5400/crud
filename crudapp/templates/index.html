@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
-    <title>Cover Template · Bootstrap</title>
+    <title>crud practice</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/cover/">
     
@@ -130,11 +130,11 @@
   </head>
   <body class="text-center">
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-  <header class="masthead mb-auto">
-    <div class="inner">
-      <h3 class="masthead-brand">CRUD</h3>
-    </div>
-  </header>
+        <header class="masthead mb-auto">
+            <div class="inner">
+            <h3 class="masthead-brand">CRUD</h3>
+            </div>
+        </header>
 
 
 
@@ -143,6 +143,15 @@
     <h1 class="cover-heading">C R U D</h1>
     <p class="lead">CREATE / READ / UPDATE / DELETE</p>
     <p class="lead">
+      {% if user.is_active %}
+      <a class="btn btn-lg btn-secondary" href="javascript:{document.getElementById('logout').submit()}">로그아웃</a>
+        <form id="logout" method="POST" action="{% url 'logout' %}">
+            {% csrf_token %} <input type="hidden" />
+        </form>
+      {% else %}
+      <a href="{% url 'login' %}" class="btn btn-lg btn-secondary">로그인</a>
+      <a href="{% url 'signup' %}" class="btn btn-lg btn-secondary">회원가입</a>
+      {% endif %}
       <a href="{% url 'home' %}" class="btn btn-lg btn-secondary">글 보러가기</a>
     </p>
   </main>
